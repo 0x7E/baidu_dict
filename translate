@@ -1,0 +1,24 @@
+#! /bin/sh
+
+TRANS_SERVER="dict.baidu.com/s?wd="
+TMP_FILE="_tmp"
+
+tmp_file() {
+        if [ -e $TMP_FILE ]; then
+                TMP_FILE=$TMP_FILE"_"
+        else
+                return
+        fi
+        tmp_file
+}
+        
+
+translate() {
+        wget -qO $TMP_FILE $TRANS_SERVER"$1"
+        cat $TMP_FILE | grep 'dict-en-simplemeans-english' | awk -F\> '{print $7}' | awk -F\< '{print $1}'
+        rm -f $TMP_FILE
+}
+
+tmp_file
+
+translate $1
